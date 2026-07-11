@@ -160,14 +160,14 @@
     <div class="step-head">
       <span class="step-num">2</span>
       <span class="step-title">Or paste your own</span>
-      <span class="step-sub">an abstract, or the text of an article</span>
+      <span class="step-sub">a study, an article — or a link to one</span>
     </div>
-    <textarea id="studyText" placeholder="Paste a study abstract or article text here…"></textarea>
+    <textarea id="studyText" placeholder="Paste a study or article — or drop a link (https://…) and NutriCut reads it for you"></textarea>
     <button id="analyzeBtn" class="cta" onclick="analyzeText()">Break it down<span class="arrow">&rarr;</span></button>
   </div>
 
   <div id="errorBox"></div>
-  <div id="loader">Reading the study's design<span class="caret"></span></div>
+  <div id="loader"><span id="loaderText">Reading the study</span><span class="caret"></span></div>
 
   <article id="results">
     <div class="result-kicker">The breakdown</div>
@@ -285,23 +285,35 @@
     try{ const r=await fetch('/fixtures/'+f); if(!r.ok) throw new Error('Failed to load example'); render(await r.json()); }
     catch(err){ showError('Could not load example: '+err.message); }
   }
+  const URL_RE = /^https?:\/\/[^\s]+$/i;
+  let loaderTimer = null;
+  function runLoader(steps){
+    let i = 0; $('loaderText').textContent = steps[0];
+    loaderTimer = setInterval(()=>{ i = Math.min(i+1, steps.length-1); $('loaderText').textContent = steps[i]; }, 1600);
+  }
+  function stopLoader(){ if(loaderTimer){ clearInterval(loaderTimer); loaderTimer=null; } }
+
   async function analyzeText(){
     if($('analyzeBtn').disabled) return; // no double-fire while a call is in flight
-    const text=$('studyText').value.trim();
-    if(!text){ showError('Paste a study abstract or text first — or tap an example above.'); $('studyText').focus(); return; }
+    const raw=$('studyText').value.trim();
+    if(!raw){ showError('Paste a study, an article, or a link — or tap an example above.'); $('studyText').focus(); return; }
+    const isUrl = URL_RE.test(raw);
     hideError(); hideResults(); $('loader').style.display='block'; $('analyzeBtn').disabled=true;
+    runLoader(isUrl ? ['Fetching the article','Finding the claim','Weighing the evidence']
+                    : ['Reading the study','Weighing the evidence']);
     const ctrl = new AbortController();
-    const timer = setTimeout(()=>ctrl.abort(), 28000); // kill the infinite spinner
+    const timer = setTimeout(()=>ctrl.abort(), isUrl ? 45000 : 28000); // URL fetch needs more headroom
     try{
-      const r=await fetch('/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text}),signal:ctrl.signal});
+      const r=await fetch('/analyze',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(isUrl ? {url:raw} : {text:raw}), signal:ctrl.signal});
       const d=await r.json(); if(!r.ok) throw new Error(d.error||'Analysis failed'); render(d);
     }catch(err){
       // input is never cleared, so "try again" always works
       showError(err.name==='AbortError'
-        ? 'That took too long to come back. Your text is still here — try again.'
-        : 'Analysis failed: '+err.message+'. Your text is still here — try again.');
+        ? 'That took too long to come back. Your input is still here — try again.'
+        : (err.message||'Analysis failed')+' — your input is still here, try again.');
     }
-    finally{ clearTimeout(timer); $('loader').style.display='none'; $('analyzeBtn').disabled=false; }
+    finally{ clearTimeout(timer); stopLoader(); $('loader').style.display='none'; $('analyzeBtn').disabled=false; }
   }
 
   function render(d){
@@ -332,10 +344,11 @@
     if(d.sample_size) parts.push(esc(d.sample_size));
     if(d.confidence) parts.push('confidence <span class="conf '+esc(d.confidence)+'">'+esc(d.confidence)+'</span>');
     $('claimsBadges').innerHTML = parts.join('<span class="dot">·</span>');
-    // verify affordance — search, we don't adjudicate
-    $('claimVerify').innerHTML = d.primary_claim
-      ? '<a class="verify-link" href="'+scholarUrl(d.primary_claim)+'" target="_blank" rel="noopener">Look this up on Google Scholar <span class="ar">&rarr;</span></a>'
-      : '';
+    // verify affordance — search, we don't adjudicate; plus the original source when read from a link
+    const vlinks = [];
+    if(d.source_url) vlinks.push('<a class="verify-link" href="'+encodeURI(d.source_url)+'" target="_blank" rel="noopener noreferrer">Read the original <span class="ar">&rarr;</span></a>');
+    if(d.primary_claim) vlinks.push('<a class="verify-link" href="'+scholarUrl(d.primary_claim)+'" target="_blank" rel="noopener">Look this up on Google Scholar <span class="ar">&rarr;</span></a>');
+    $('claimVerify').innerHTML = vlinks.join('<span class="dot" style="margin:0 12px">·</span>');
 
     // evidence ladder (design position; unknown → not guessed)
     const key = String(d.study_type||'');
