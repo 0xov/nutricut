@@ -1,0 +1,15 @@
+{
+  "headline_claim": "Eating Chocolate Every Day Is Good for Your Heart",
+  "primary_claim": "In an observational cohort followed for 11 years, adults who reported eating more chocolate had a modestly lower rate of cardiovascular events than those who ate little or none.",
+  "study_type": "observational",
+  "sample_size": "~20,000 adults, 11-year follow-up",
+  "confidence": "low",
+  "epistemic_gaps": [
+    "This is an observational cohort, so it can only show an association — it cannot establish that chocolate itself lowers cardiovascular risk.",
+    "Reverse causation is unaddressed: healthier people (or those without early heart symptoms) may simply feel freer to eat more chocolate.",
+    "Residual confounding is likely — regular chocolate eaters may differ systematically in income, overall diet, and activity, none of which are fully controlled.",
+    "Chocolate intake was self-reported via food-frequency questionnaire, which is imprecise and prone to recall bias.",
+    "A portion of cocoa and chocolate research is industry-funded, which does not invalidate the finding but warrants caution on framing."
+  ],
+  "contradictions": []
+}

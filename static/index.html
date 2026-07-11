@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NutriCut — read what a health study actually proves</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#faf9f6; --ink:#211d18; --ink-soft:#5c554b; --faint:#938b7d;
+    --rule:#e3dfd5; --rule-strong:#cdc7b9; --sel:#e8e3d6;
+    --confirm:#2f6b3e; --unproven:#9a6b1a; --contradict:#9b3a28;
+    --fill:#f1efe8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  ::selection{background:var(--sel);}
+  body{background:var(--paper);color:var(--ink);
+    font-family:'Source Serif 4',Georgia,serif;font-size:17px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;padding:48px 24px 96px;}
+  .sheet{max-width:780px;margin:0 auto;}
+  .display{font-family:'Newsreader',Georgia,serif;}
+
+  /* masthead */
+  .masthead{text-align:center;padding-bottom:22px;border-bottom:2px solid var(--ink);margin-bottom:30px;}
+  .kicker{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--faint);margin-bottom:11px;}
+  .masthead h1{font-family:'Newsreader',serif;font-weight:600;font-size:46px;letter-spacing:-.015em;line-height:1;}
+  .lead{margin:15px auto 0;max-width:56ch;font-size:16.5px;color:var(--ink-soft);line-height:1.6;}
+  .lead b{color:var(--ink);font-weight:600;}
+
+  /* STEP 1 — examples (the obvious first move) */
+  .step{margin-bottom:26px;}
+  .step-head{display:flex;align-items:baseline;gap:10px;margin-bottom:14px;}
+  .step-num{font-family:'Newsreader',serif;font-weight:600;font-size:15px;color:var(--paper);background:var(--ink);
+    width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .step-title{font-size:18px;font-weight:600;}
+  .step-sub{color:var(--ink-soft);font-size:15px;}
+  .ex-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;}
+  .ex{text-align:left;background:var(--paper);border:1px solid var(--rule-strong);border-radius:4px;
+    padding:13px 15px;cursor:pointer;font-family:inherit;color:var(--ink);transition:border-color .14s,background .14s;}
+  .ex:hover{border-color:var(--ink);background:var(--fill);}
+  .ex .q{font-size:15.5px;font-weight:600;line-height:1.3;}
+  .ex .k{font-size:12.5px;color:var(--faint);margin-top:4px;}
+  /* label mode toggle */
+  .toggle{margin-left:auto;display:inline-flex;border:1px solid var(--rule-strong);border-radius:5px;overflow:hidden;flex-shrink:0;}
+  .toggle button{font-family:inherit;font-size:12.5px;font-weight:600;color:var(--ink-soft);background:var(--paper);
+    border:none;padding:5px 12px;cursor:pointer;transition:background .12s,color .12s;}
+  .toggle button+button{border-left:1px solid var(--rule-strong);}
+  .toggle button.on{background:var(--ink);color:var(--paper);}
+
+  /* STEP 2 — paste your own */
+  .divider{display:flex;align-items:center;gap:14px;color:var(--faint);font-size:14px;margin:4px 0 18px;}
+  .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--rule);}
+  textarea{width:100%;min-height:82px;resize:vertical;background:var(--paper);border:1px solid var(--rule-strong);
+    border-radius:4px;padding:14px 16px;color:var(--ink);font-family:inherit;font-size:16px;line-height:1.55;}
+  textarea::placeholder{color:var(--faint);}
+  textarea:focus{outline:none;border-color:var(--ink-soft);}
+  .cta{margin-top:12px;font-family:inherit;font-size:16px;font-weight:700;color:var(--paper);background:var(--ink);
+    border:none;border-radius:4px;padding:12px 26px;cursor:pointer;transition:background .14s;}
+  .cta:hover{background:#000;} .cta:disabled{opacity:.4;cursor:not-allowed;}
+  .cta .arrow{font-weight:400;margin-left:4px;}
+
+  #errorBox{display:none;margin-top:18px;padding:11px 0;border-top:1px solid var(--contradict);color:var(--contradict);font-size:15px;font-weight:500;}
+  #loader{display:none;margin-top:40px;text-align:center;color:var(--ink-soft);font-size:16px;font-weight:500;}
+  #loader .caret{display:inline-block;width:2px;height:1em;background:var(--ink-soft);margin-left:3px;vertical-align:-2px;animation:blink 1s step-end infinite;}
+  @keyframes blink{50%{opacity:0;}}
+
+  /* results */
+  #results{display:none;margin-top:44px;padding-top:6px;border-top:2px solid var(--ink);animation:fade .5s ease both;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  .result-kicker{font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--faint);margin:16px 0 20px;}
+  .sec-label{font-size:14px;font-weight:700;letter-spacing:.02em;padding-bottom:8px;border-bottom:1px solid var(--rule);margin-bottom:16px;}
+  .sec-label.g{color:var(--confirm);} .sec-label.a{color:var(--unproven);} .sec-label.r{color:var(--contradict);}
+
+  .claim-block{margin-bottom:32px;}
+  .lede{font-family:'Newsreader',serif;font-weight:500;font-size:25px;line-height:1.42;letter-spacing:-.008em;}
+  .meta{margin-top:16px;font-size:15px;color:var(--ink-soft);font-variant-numeric:tabular-nums;}
+  .meta .dot{color:var(--faint);margin:0 9px;}
+  .meta .conf{font-weight:700;text-transform:uppercase;letter-spacing:.03em;font-size:13px;}
+  .meta .conf.high{color:var(--confirm);} .meta .conf.medium{color:var(--unproven);} .meta .conf.low{color:var(--contradict);}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:38px;}
+  .cols .col:first-child{padding-right:38px;border-right:1px solid var(--rule);}
+  @media (max-width:720px){.cols{grid-template-columns:1fr;gap:28px;}.cols .col:first-child{padding-right:0;border-right:none;border-bottom:1px solid var(--rule);padding-bottom:24px;}}
+  .item{padding:13px 0;border-top:1px solid var(--rule);font-size:16px;line-height:1.55;}
+  .item:first-of-type{border-top:none;padding-top:2px;}
+  .item .num{font-weight:700;color:var(--faint);margin-right:9px;}
+  .contra .src{display:block;margin-top:6px;font-size:13.5px;color:var(--contradict);font-weight:500;}
+  .contra .src-link{color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--rule-strong);text-decoration:none;white-space:nowrap;}
+  .contra .src-link:hover{color:var(--ink);border-color:var(--ink);}
+  .none{color:var(--ink-soft);font-size:15px;line-height:1.55;padding-top:2px;}
+
+  /* verdict banner — evidence STRENGTH, not truth (Cochrane-style narrative, humble) */
+  .verdict{margin:2px 0 30px;padding:15px 18px;border:1px solid var(--rule-strong);border-left:3px solid var(--ink);
+    border-radius:4px;background:var(--fill);}
+  .verdict .vk{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:6px;}
+  .verdict .vk .lvl{font-weight:700;}
+  .verdict .vt{font-family:'Newsreader',serif;font-size:19px;line-height:1.42;color:var(--ink);}
+  .verdict.s-strong{border-left-color:var(--confirm);} .verdict.s-strong .lvl{color:var(--confirm);}
+  .verdict.s-moderate{border-left-color:var(--unproven);} .verdict.s-moderate .lvl{color:var(--unproven);}
+  .verdict.s-weak{border-left-color:var(--contradict);} .verdict.s-weak .lvl{color:var(--contradict);}
+  .verdict.s-unknown{border-left-color:var(--faint);} .verdict.s-unknown .lvl{color:var(--ink-soft);}
+
+  /* headline vs. what it measured — only shown when the input carries a sensational headline */
+  .claimgap{margin:2px 0 28px;border:1px solid var(--rule-strong);border-left:3px solid var(--unproven);border-radius:4px;background:var(--paper);}
+  .claimgap .cg-tag{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);padding:13px 17px 0;}
+  .claimgap .cg-head{padding:5px 17px 14px;font-family:'Newsreader',serif;font-weight:500;font-size:21px;line-height:1.34;color:var(--ink);}
+  .claimgap .cg-turn{background:var(--fill);border-top:1px solid var(--rule);padding:10px 17px;font-size:13.5px;color:var(--ink-soft);}
+  .claimgap .cg-turn b{color:var(--ink);font-weight:600;}
+
+  /* claim verify affordance — a search link (user action), never "verified" */
+  .claim-verify{margin-top:15px;}
+  .verify-link{display:inline-block;font-size:13.5px;color:var(--ink-soft);text-decoration:none;
+    border-bottom:1px solid var(--rule-strong);padding-bottom:1px;}
+  .verify-link:hover{color:var(--ink);border-color:var(--ink);}
+  .verify-link .ar{opacity:.55;}
+
+  /* evidence ladder — design position, NOT a score/star rating */
+  .ladder-wrap{margin-bottom:34px;}
+  .ladder{list-style:none;margin:14px 0 11px;border-top:1px solid var(--rule);}
+  .ladder li{display:flex;align-items:center;gap:12px;padding:9px 12px;border-bottom:1px solid var(--rule);
+    font-size:15px;color:var(--faint);}
+  .ladder li .tick{width:8px;height:8px;border-radius:50%;background:var(--rule-strong);flex-shrink:0;}
+  .ladder li .rlabel{flex:1;}
+  .ladder li.active{color:var(--ink);font-weight:600;background:var(--fill);}
+  .ladder li.active .tick{background:var(--ink);}
+  .ladder li.active .here{font-size:11px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.08em;}
+  .ladder-unknown{font-size:14.5px;color:var(--ink-soft);line-height:1.5;padding:12px 14px;background:var(--fill);
+    border:1px dashed var(--rule-strong);border-radius:4px;margin:14px 0 11px;}
+  .ladder-note{font-size:13px;color:var(--faint);line-height:1.5;}
+
+  footer{margin-top:52px;padding-top:16px;border-top:1px solid var(--rule);text-align:center;font-size:13px;color:var(--faint);}
+  @media (max-width:560px){.masthead h1{font-size:36px;}}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="masthead">
+    <div class="kicker">Research literacy</div>
+    <h1>NutriCut</h1>
+    <p class="lead">Health headlines contradict each other constantly. Paste a study (or tap an example) and NutriCut shows you <b>what it claims</b>, <b>what it hasn't proven</b>, and <b>what contradicts it</b> — so you decide how much to believe.</p>
+  </header>
+
+  <!-- STEP 1: examples -->
+  <div class="step">
+    <div class="step-head">
+      <span class="step-num">1</span>
+      <span class="step-title">Tap a real study to see it work</span>
+      <span class="toggle" role="group" aria-label="Example labels">
+        <button id="mCurious" class="on" onclick="setMode('curious')">Plain</button>
+        <button id="mAcademic" onclick="setMode('academic')">Academic</button>
+      </span>
+    </div>
+    <div class="ex-grid" id="exGrid"></div>
+  </div>
+
+  <!-- STEP 2: paste your own -->
+  <div class="step">
+    <div class="step-head">
+      <span class="step-num">2</span>
+      <span class="step-title">Or paste your own</span>
+      <span class="step-sub">an abstract, or the text of an article</span>
+    </div>
+    <textarea id="studyText" placeholder="Paste a study abstract or article text here…"></textarea>
+    <button id="analyzeBtn" class="cta" onclick="analyzeText()">Break it down<span class="arrow">&rarr;</span></button>
+  </div>
+
+  <div id="errorBox"></div>
+  <div id="loader">Reading the study's design<span class="caret"></span></div>
+
+  <article id="results">
+    <div class="result-kicker">The breakdown</div>
+
+    <div class="verdict" id="verdict"></div>
+
+    <div class="claimgap" id="claimGap" style="display:none"></div>
+
+    <div class="claim-block">
+      <div class="sec-label g">What it claims</div>
+      <p class="lede" id="primaryClaim"></p>
+      <div class="meta" id="claimsBadges"></div>
+      <div class="claim-verify" id="claimVerify"></div>
+    </div>
+
+    <div class="ladder-wrap">
+      <div class="sec-label">Where this study sits</div>
+      <ol class="ladder" id="ladder"></ol>
+      <p class="ladder-note">A rough guide to study <em>design</em>, not a verdict on truth. A well-run cohort can outweigh a weak trial — and correlation isn't causation.</p>
+    </div>
+
+    <div class="cols">
+      <section class="col">
+        <div class="sec-label a">What it hasn't proven</div>
+        <div id="epistemicGaps"></div>
+      </section>
+      <section class="col contra">
+        <div class="sec-label r">What contradicts it</div>
+        <div id="contradictionsList"></div>
+      </section>
+    </div>
+  </article>
+
+  <footer>Reads one study's design, not the debate around it. Analysis by Gemini — you make the call.</footer>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const scholarUrl = q => 'https://scholar.google.com/scholar?q=' + encodeURIComponent(String(q).slice(0,300));
+
+  // Evidence hierarchy (strongest → weakest DESIGN). pos also drives the verdict tier.
+  // Deterministic: keyed off the already-extracted study_type enum. No LLM, no fabrication.
+  const LADDER_ROWS = [
+    { key:'meta_analysis', label:'Meta-analysis / systematic review' },
+    { key:'RCT',           label:'Randomized controlled trial' },
+    { key:'observational', label:'Observational / cohort study' },
+    { key:'case_study',    label:'Case study / report' },
+    { key:'animal_model',  label:'Animal / lab model' },
+    { key:'mechanistic',   label:'Mechanistic / in-vitro' },
+  ];
+  const POS = Object.fromEntries(LADDER_ROWS.map((r,i)=>[r.key,i]));
+  const VERDICT = {
+    strong:   { lvl:'Strong',      text:'Strong study design. Reasonable to lean on — though one study is still one study.' },
+    moderate: { lvl:'Moderate',    text:'Moderate evidence. Suggestive, but not settled.' },
+    weak:     { lvl:'Early-stage', text:'Early-stage evidence. A signal worth noting, not a conclusion to act on.' },
+    unknown:  { lvl:'Unclear',     text:"Study design unclear from the text — treat this evidence as unconfirmed." },
+  };
+  // strength = design rung, then confidence may only DOWNGRADE (never upgrade a weak design)
+  function evidenceStrength(d){
+    const pos = POS[String(d.study_type||'')];
+    const conf = String(d.confidence||'').toLowerCase();
+    const hasContra = !!(d.contradictions && d.contradictions.length);
+    let tier;
+    if(pos===undefined) tier='unknown';
+    else if(pos<=1) tier='strong';
+    else if(pos===2) tier='moderate';
+    else tier='weak';
+    if(tier==='strong' && conf==='low') tier='moderate';
+    if(tier==='moderate' && conf==='low') tier='weak';
+    return { tier, hasContra };
+  }
+
+  // Two label sets for the demo studies. Plain = curiosity hook (default), Academic = study-accurate.
+  const EXAMPLES = [
+    { file:'ethan_industry_nejm.json',
+      plain:{q:'An industry-funded vaccine trial', k:'Watch it flag who paid for it'},
+      academic:{q:'BNT162b2 mRNA vaccine — Phase 3 RCT', k:'NEJM · n=46,429 · 91% efficacy'} },
+    { file:'ethan_systematic_review_aha.json',
+      plain:{q:'A strong systematic review', k:'See it rate this one “high”'},
+      academic:{q:'Sleep &amp; cardiometabolic risk', k:'AHA scientific statement · meta-analysis'} },
+    { file:'ethan_specific_obesity.json',
+      plain:{q:'A small diet study (24 people)', k:'See why the sample is a limit'},
+      academic:{q:'MCT vs. LCT diet &amp; body fat', k:'28-day RCT · n=24 · confidence medium'} },
+    { file:'creatine_kidney.json',
+      plain:{q:'“Creatine wrecks your kidneys”', k:'See the counter-evidence'},
+      academic:{q:'Creatine &amp; serum creatinine', k:'Single case report · n=1'} },
+    { file:'red_meat.json',
+      plain:{q:'“Red meat causes cancer”', k:'Relative vs. absolute risk'},
+      academic:{q:'Red meat &amp; colorectal cancer', k:'Meta-analysis · RR 1.17 per 100g/day'} },
+    { file:'news_chocolate_heart.json',
+      plain:{q:'“Chocolate is good for your heart”', k:'Headline vs. what it measured'},
+      academic:{q:'Chocolate &amp; heart disease', k:'Observational cohort · headline drift'} },
+  ];
+  let mode = 'plain';
+  function renderExamples(){
+    $('exGrid').innerHTML = EXAMPLES.map(e => {
+      const L = e[mode];
+      return '<button class="ex" onclick="loadFixture(\''+e.file+'\')"><div class="q">'+L.q+'</div><div class="k">'+L.k+'</div></button>';
+    }).join('');
+  }
+  function setMode(m){
+    mode = m;
+    $('mCurious').classList.toggle('on', m==='plain');
+    $('mAcademic').classList.toggle('on', m==='academic');
+    renderExamples();
+  }
+  renderExamples();
+  function hideError(){ $('errorBox').style.display='none'; }
+  function showError(m){ const e=$('errorBox'); e.textContent=m; e.style.display='block'; }
+  function hideResults(){ $('results').style.display='none'; }
+
+  async function loadFixture(f){
+    hideError(); hideResults(); $('studyText').value='';
+    try{ const r=await fetch('/fixtures/'+f); if(!r.ok) throw new Error('Failed to load example'); render(await r.json()); }
+    catch(err){ showError('Could not load example: '+err.message); }
+  }
+  async function analyzeText(){
+    if($('analyzeBtn').disabled) return; // no double-fire while a call is in flight
+    const text=$('studyText').value.trim();
+    if(!text){ showError('Paste a study abstract or text first — or tap an example above.'); $('studyText').focus(); return; }
+    hideError(); hideResults(); $('loader').style.display='block'; $('analyzeBtn').disabled=true;
+    const ctrl = new AbortController();
+    const timer = setTimeout(()=>ctrl.abort(), 28000); // kill the infinite spinner
+    try{
+      const r=await fetch('/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text}),signal:ctrl.signal});
+      const d=await r.json(); if(!r.ok) throw new Error(d.error||'Analysis failed'); render(d);
+    }catch(err){
+      // input is never cleared, so "try again" always works
+      showError(err.name==='AbortError'
+        ? 'That took too long to come back. Your text is still here — try again.'
+        : 'Analysis failed: '+err.message+'. Your text is still here — try again.');
+    }
+    finally{ clearTimeout(timer); $('loader').style.display='none'; $('analyzeBtn').disabled=false; }
+  }
+
+  function render(d){
+    // verdict banner (evidence strength, deterministic)
+    const es = evidenceStrength(d);
+    const v = VERDICT[es.tier];
+    let vt = v.text;
+    if(es.hasContra) vt += ' Counter-evidence exists — see below.';
+    const vb = $('verdict');
+    vb.className = 'verdict s-'+es.tier;
+    vb.innerHTML = '<div class="vk">Evidence strength · <span class="lvl">'+v.lvl+'</span></div><div class="vt">'+esc(vt)+'</div>';
+
+    // headline vs. measured — only when a verbatim headline survived the server-side guard
+    const cg = $('claimGap');
+    const hl = String(d.headline_claim||'').trim();
+    if(hl){
+      cg.style.display='block';
+      cg.innerHTML = '<div class="cg-tag">The headline said</div><div class="cg-head">“'+esc(hl)+'”</div>'
+        + '<div class="cg-turn">&darr;&nbsp; <b>What the study actually measured</b> — usually narrower than the headline.</div>';
+    } else {
+      cg.style.display='none'; cg.innerHTML='';
+    }
+
+    // claim
+    $('primaryClaim').textContent = d.primary_claim || 'No clear claim extracted.';
+    const parts=[];
+    if(d.study_type) parts.push(esc(String(d.study_type).replace(/_/g,' ')));
+    if(d.sample_size) parts.push(esc(d.sample_size));
+    if(d.confidence) parts.push('confidence <span class="conf '+esc(d.confidence)+'">'+esc(d.confidence)+'</span>');
+    $('claimsBadges').innerHTML = parts.join('<span class="dot">·</span>');
+    // verify affordance — search, we don't adjudicate
+    $('claimVerify').innerHTML = d.primary_claim
+      ? '<a class="verify-link" href="'+scholarUrl(d.primary_claim)+'" target="_blank" rel="noopener">Look this up on Google Scholar <span class="ar">&rarr;</span></a>'
+      : '';
+
+    // evidence ladder (design position; unknown → not guessed)
+    const key = String(d.study_type||'');
+    const lad = $('ladder');
+    if(POS[key]===undefined){
+      lad.innerHTML = '<li class="ladder-unknown">This study’s design couldn’t be placed on the ladder from the text — position unconfirmed. We don’t guess a rung.</li>';
+    } else {
+      lad.innerHTML = LADDER_ROWS.map(r=>{
+        const on = r.key===key;
+        return '<li class="'+(on?'active':'')+'"><span class="tick"></span><span class="rlabel">'+r.label+'</span>'+(on?'<span class="here">this study</span>':'')+'</li>';
+      }).join('');
+    }
+
+    // what it hasn't proven — empty = positive signal (distinct copy)
+    const g=$('epistemicGaps');
+    g.innerHTML = (d.epistemic_gaps&&d.epistemic_gaps.length)
+      ? d.epistemic_gaps.map((x,i)=>'<div class="item"><span class="num">'+(i+1)+'</span>'+esc(x)+'</div>').join('')
+      : '<div class="none">No major design gaps stood out for this study type — the claim looks reasonably supported on its own terms.</div>';
+
+    // what contradicts it — empty = honesty signal, system-bound wording + per-source search link
+    const c=$('contradictionsList');
+    c.innerHTML = (d.contradictions&&d.contradictions.length)
+      ? d.contradictions.map(x=>'<div class="item">'+esc(x.point)
+          +'<span class="src">'+esc(x.source)
+          +' <a class="src-link" href="'+scholarUrl(x.source)+'" target="_blank" rel="noopener">search this &rarr;</a></span></div>').join('')
+      : '<div class="none">No counter-evidence surfaced in this text. That’s not a miss — NutriCut won’t invent a citation it can’t find.</div>';
+
+    $('results').style.display='block';
+    $('results').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+</script>
+</body>
+</html>

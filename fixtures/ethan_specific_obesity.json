@@ -1,0 +1,13 @@
+{
+  "primary_claim": "Consumption of a diet rich in medium-chain triglycerides (MCTs) for 28 days resulted in a greater decrease in upper body adipose tissue (-0.67 +/- 0.26 kg) compared to long-chain triglycerides (LCTs) (-0.02 +/- 0.19 kg) in overweight men. There was also a trend toward greater loss of whole-body subcutaneous adipose tissue volume (p = 0.087) and a transient increase in energy expenditure and fat oxidation (significant on day 2 but not day 28).",
+  "study_type": "RCT",
+  "sample_size": "24 healthy, overweight men",
+  "confidence": "medium",
+  "epistemic_gaps": [
+    "Small sample size (n=24) limits the generalizability and statistical power of the findings.",
+    "The study duration was relatively short (28 days), which may not reflect long-term effects on body composition or weight management.",
+    "Some reported effects, such as on whole-body subcutaneous adipose tissue volume (p=0.087) and energy expenditure/fat oxidation on day 28, were not statistically significant or only showed a trend, suggesting limited robustness of these specific findings.",
+    "The study population was limited to overweight men, which limits the generalizability of the findings to women or individuals with different body mass indexes or health conditions."
+  ],
+  "contradictions": []
+}

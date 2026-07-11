@@ -1,0 +1,17 @@
+{
+  "primary_claim": "Creatine is destroying your kidneys.",
+  "study_type": "case_study",
+  "sample_size": "1",
+  "confidence": "low",
+  "epistemic_gaps": [
+    "This is a single case report, which cannot establish general causation or be generalized to a wider population.",
+    "Elevated serum creatinine is a surrogate marker and does not definitively prove kidney damage or 'destruction'. Creatine supplementation can naturally increase creatinine levels without indicating kidney dysfunction.",
+    "The study design (case report) cannot support the broad causal claim made in the headline."
+  ],
+  "contradictions": [
+    {
+      "point": "Numerous randomized controlled trials and meta-analyses have shown that creatine supplementation, at recommended doses, does not adversely affect kidney function in healthy individuals.",
+      "source": "Multiple scientific reviews and studies on creatine safety"
+    }
+  ]
+}

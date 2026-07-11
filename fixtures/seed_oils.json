@@ -1,0 +1,12 @@
+{
+  "primary_claim": "Seed oils are inflaming your body.",
+  "study_type": "mechanistic",
+  "sample_size": "cell cultures",
+  "confidence": "low",
+  "epistemic_gaps": [
+    "Findings from in-vitro cell cultures do not directly translate to complex human physiology.",
+    "Mechanistic findings about inflammatory signaling do not equate to clinical outcomes or whole-body inflammatory effects in humans.",
+    "The study does not establish a causal link between seed oil consumption and inflammation in humans."
+  ],
+  "contradictions": []
+}

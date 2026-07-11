@@ -1,0 +1,10 @@
+{
+  "primary_claim": "Short sleep duration and sleep disorders are related to adverse cardiometabolic risk, including obesity, hypertension, type 2 diabetes mellitus, and cardiovascular disease, based on a review of existing evidence.",
+  "study_type": "meta_analysis",
+  "sample_size": "Not applicable, as this is a scientific statement reviewing existing literature.",
+  "confidence": "high",
+  "epistemic_gaps": [
+    "While the statement synthesizes evidence, much of the underlying research on lifestyle factors like sleep duration and cardiometabolic health is observational, which can show correlation but does not definitively prove causation."
+  ],
+  "contradictions": []
+}
