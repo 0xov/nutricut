@@ -2,11 +2,13 @@ import os
 import re
 import html
 import json
+import time
 import socket
 import ipaddress
 import urllib.request
 import urllib.error
 import urllib.parse
+from collections import deque
 from flask import Flask, request, jsonify, send_from_directory
 
 # Cap the text we ever send to Gemini (cost + latency control).
@@ -14,6 +16,27 @@ MAX_CHARS = 14000
 FETCH_TIMEOUT = 10          # seconds per hop
 FETCH_MAX_BYTES = 2_000_000  # 2 MB response cap
 FETCH_UA = "NutriCut/1.0 (+https://github.com/0xov/nutricut) research-literacy reader"
+
+# Per-IP rate limit on the costed /analyze path — protects a public endpoint's
+# paid Gemini key from billing-drain abuse. In-memory (per instance) + a
+# --max-instances cap at deploy bound the blast radius; good enough for a demo.
+RL_MAX = 10
+RL_WINDOW = 60  # seconds
+_HITS = {}
+
+
+def _rate_limited(ip):
+    now = time.time()
+    dq = _HITS.setdefault(ip, deque())
+    while dq and now - dq[0] > RL_WINDOW:
+        dq.popleft()
+    if len(dq) >= RL_MAX:
+        return True
+    dq.append(now)
+    if len(_HITS) > 5000:  # bound memory: drop stale buckets
+        for k in [k for k, v in list(_HITS.items()) if not v or now - v[-1] > RL_WINDOW]:
+            _HITS.pop(k, None)
+    return False
 
 
 def _load_dotenv():
@@ -130,7 +153,7 @@ def _safe_fetch(url, max_redirects=4):
             raise ValueError("only http(s) links are supported")
         if not parsed.hostname or not _host_is_safe(parsed.hostname):
             raise ValueError("that link points somewhere we can't fetch")
-        req = urllib.request.Request(url, headers={"User-Agent": FETCH_UA, "Accept": "text/html,*/*"})
+        req = urllib.request.Request(url, headers={"User-Agent": FETCH_UA, "Accept": "text/html,*/*", "Accept-Encoding": "identity"})
         try:
             resp = opener.open(req, timeout=FETCH_TIMEOUT)
         except urllib.error.HTTPError as e:
@@ -159,7 +182,12 @@ def serve_fixtures(filename):
 def analyze():
     if not KEY:
         return jsonify({"error": "GEMINI_API_KEY not set in environment"}), 500
-        
+
+    ip = (request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
+          or request.remote_addr or "unknown")
+    if _rate_limited(ip):
+        return jsonify({"error": "You're going a bit fast — give it a few seconds and try again."}), 429
+
     data = request.get_json(silent=True) or {}
     url_in = (data.get('url') or '').strip()
     text = (data.get('text') or '').strip()
