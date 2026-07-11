@@ -1,0 +1,13 @@
+{
+  "confidence": "medium",
+  "contradictions": [],
+  "epistemic_gaps": [
+    "The sample size is very small (n=21), limiting generalizability.",
+    "The study focused on lower-body training; results may not apply to other muscle groups.",
+    "The primary outcomes measured were mechanistic/surrogate endpoints (muscle fiber cross-sectional area, satellite cells, anabolic signaling) rather than direct long-term functional performance outcomes (though both groups gained strength, the difference was in hypertrophy and cellular markers)."
+  ],
+  "headline_claim": "",
+  "primary_claim": "Regular cold-water immersion (10C for 10 minutes) after lower-body resistance training significantly attenuated gains in muscle fiber cross-sectional area and satellite cell number, and blunted anabolic signaling (mTOR and p70S6K activation) for up to two days post-training, compared to active recovery, in physically active men over 12 weeks.",
+  "sample_size": "21 physically active men",
+  "study_type": "RCT"
+}

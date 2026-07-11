@@ -137,9 +137,9 @@
 <body>
 <div class="sheet">
   <header class="masthead">
-    <div class="kicker">Research literacy</div>
+    <div class="kicker">Sports science, decoded</div>
     <h1>NutriCut</h1>
-    <p class="lead">Health headlines contradict each other constantly. Paste a study (or tap an example) and NutriCut shows you <b>what it claims</b>, <b>what it hasn't proven</b>, and <b>what contradicts it</b> — so you decide how much to believe.</p>
+    <p class="lead">Every season a new headline promises the edge — ice baths for recovery, caffeine to run the whole match, the supplement that finally builds muscle. NutriCut doesn't tell you who's right. Paste the study and it shows <b>what it claims</b>, <b>what it hasn't proven</b>, and <b>where the science pushes back</b> — then grades how strong the evidence really is, so you can judge it yourself.</p>
   </header>
 
   <!-- STEP 1: examples -->
@@ -201,7 +201,7 @@
     </div>
   </article>
 
-  <footer>Reads one study's design, not the debate around it. Analysis by Gemini — you make the call.</footer>
+  <footer>Reads one study's design, not the whole debate. Evidence and its strength — you make the call. Not medical advice.</footer>
 </div>
 
 <script>
@@ -243,24 +243,24 @@
 
   // Two label sets for the demo studies. Plain = curiosity hook (default), Academic = study-accurate.
   const EXAMPLES = [
-    { file:'ethan_industry_nejm.json',
-      plain:{q:'An industry-funded vaccine trial', k:'Watch it flag who paid for it'},
-      academic:{q:'BNT162b2 mRNA vaccine — Phase 3 RCT', k:'NEJM · n=46,429 · 91% efficacy'} },
-    { file:'ethan_systematic_review_aha.json',
-      plain:{q:'A strong systematic review', k:'See it rate this one “high”'},
-      academic:{q:'Sleep &amp; cardiometabolic risk', k:'AHA scientific statement · meta-analysis'} },
-    { file:'ethan_specific_obesity.json',
-      plain:{q:'A small diet study (24 people)', k:'See why the sample is a limit'},
-      academic:{q:'MCT vs. LCT diet &amp; body fat', k:'28-day RCT · n=24 · confidence medium'} },
+    { file:'cold_plunge_hypertrophy.json',
+      plain:{q:'Does an ice bath after lifting help you grow?', k:'The recovery hack, checked against the trials'},
+      academic:{q:'Cold-water immersion &amp; muscle growth', k:'12-week RCT · CWI blunts hypertrophy'} },
+    { file:'caffeine_endurance.json',
+      plain:{q:'Is pre-workout caffeine legit, or just hype?', k:'The one supplement the evidence actually backs'},
+      academic:{q:'Caffeine &amp; endurance performance', k:'Meta-analysis · 46 trials · strong'} },
+    { file:'protein_timing_window.json',
+      plain:{q:'Must I slam a shake within 30 minutes?', k:'The “anabolic window,” put to the test'},
+      academic:{q:'The 2006 “anabolic window” trial', k:'Small RCT · claim vs. modern consensus'} },
+    { file:'static_stretching_injury.json',
+      plain:{q:'Will skipping your stretches get you injured?', k:'The warm-up rule, checked against reviews'},
+      academic:{q:'Static stretching &amp; injury prevention', k:'Systematic review · injury + performance'} },
     { file:'creatine_kidney.json',
-      plain:{q:'“Creatine wrecks your kidneys”', k:'See the counter-evidence'},
-      academic:{q:'Creatine &amp; serum creatinine', k:'Single case report · n=1'} },
-    { file:'red_meat.json',
-      plain:{q:'“Red meat causes cancer”', k:'Relative vs. absolute risk'},
-      academic:{q:'Red meat &amp; colorectal cancer', k:'Meta-analysis · RR 1.17 per 100g/day'} },
-    { file:'news_chocolate_heart.json',
-      plain:{q:'“Chocolate is good for your heart”', k:'Headline vs. what it measured'},
-      academic:{q:'Chocolate &amp; heart disease', k:'Observational cohort · headline drift'} },
+      plain:{q:'Does creatine wreck your kidneys?', k:'The gym scare vs. the counter-evidence'},
+      academic:{q:'Creatine &amp; kidney function', k:'Single case report · n=1'} },
+    { file:'running_longevity_drift.json',
+      plain:{q:'Does 5 min of running add 3 years to your life?', k:'A viral headline vs. the study behind it'},
+      academic:{q:'Running &amp; long-term mortality', k:'Observational cohort · n=55,137 · headline drift'} },
   ];
   let mode = 'plain';
   function renderExamples(){

@@ -1,0 +1,11 @@
+{
+  "confidence": "high",
+  "contradictions": [],
+  "epistemic_gaps": [
+    "The authors noted substantial individual variation in response to caffeine, meaning the average effect may not apply equally to all individuals."
+  ],
+  "headline_claim": "",
+  "primary_claim": "A moderate dose of 3 to 6 mg per kilogram of body mass of caffeine, taken about 60 minutes before exercise, improved time-trial completion time by roughly 2 percent and mean power output by about 3 percent in aerobic endurance events such as cycling and distance running.",
+  "sample_size": "46 studies",
+  "study_type": "meta_analysis"
+}

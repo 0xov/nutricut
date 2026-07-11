@@ -1,0 +1,11 @@
+{
+  "confidence": "medium",
+  "contradictions": [],
+  "epistemic_gaps": [
+    "This was an observational study, meaning it can report an association but cannot establish that running itself caused the longer lifespans."
+  ],
+  "headline_claim": "Just five minutes of running a day adds three years to your life.",
+  "primary_claim": "Runners had roughly 30 percent lower all-cause mortality and about 45 percent lower cardiovascular mortality, and lived on average about three years longer compared to non-runners, with benefits observed even among those who ran only 5 to 10 minutes a day at slow speeds.",
+  "sample_size": "55,137 adults",
+  "study_type": "observational"
+}

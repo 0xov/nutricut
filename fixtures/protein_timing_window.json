@@ -1,0 +1,19 @@
+{
+  "confidence": "low",
+  "contradictions": [
+    {
+      "point": "The concept of a narrow 'anabolic window' (e.g., 30 minutes post-workout) for protein intake has been largely superseded by evidence suggesting a much broader window (several hours) and that total daily protein intake is more critical for muscle growth.",
+      "source": "Strong scientific consensus (e.g., ISSN position stand on nutrient timing)"
+    }
+  ],
+  "epistemic_gaps": [
+    "The study compares two timing strategies, not the presence vs. absence of nutrient timing, making it difficult to conclude that immediate timing is 'critical' for all muscle growth.",
+    "The sample size is not specified, which could limit the generalizability of the findings.",
+    "This is a single study; findings require replication to establish stronger evidence.",
+    "The conclusion drawn by the authors overstates the implications of the specific finding, generalizing to 'critical for maximizing muscle growth' and 'must consume protein within roughly 30 minutes'."
+  ],
+  "headline_claim": "nutrient timing around the training session, the so-called anabolic window, is critical for maximizing muscle growth, and that athletes must consume protein within roughly 30 minutes of finishing a workout to avoid missing out on gains",
+  "primary_claim": "Men who consumed a protein-carbohydrate supplement immediately before and after resistance training gained more muscle cross-sectional area over 10 weeks than a group that took the same supplement in the morning and evening, away from their workout.",
+  "sample_size": "Not specified",
+  "study_type": "RCT"
+}

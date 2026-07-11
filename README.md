@@ -1,9 +1,9 @@
 # NutriCut
 
-Paste a nutrition or health study and an AI separates **what it claims**, **what it hasn't proven**, and **what contradicts it**. A trust layer, not a fact-checker — it shows you *how much weight* a study actually carries, so you decide what to believe.
+Paste a sports-science study and an AI separates **what it claims**, **what it hasn't proven**, and **where the evidence actually stands**. A trust layer, not a fact-checker — it shows you *how much weight* a study really carries, so you decide what to believe. (The *cut* is the bodybuilding term; the job is the same — strip a claim down to what's really there.)
 
 ## The problem
-Health research constantly contradicts itself: coffee is good, then bad; creatine is dangerous, then fine. Most people can't tell a strong study from a weak one, and headlines strip away every caveat. The result is confusion — and eventually people stop trusting any health advice at all.
+Every season, sports and fitness culture serves up another confident headline: ice baths build muscle, you must slam a shake within 30 minutes, creatine wrecks your kidneys, five minutes of running adds three years to your life. Half of it is oversold supplement marketing or a viral headline stripped of every caveat, and most people — athletes included — can't tell a strong study from a weak one. The result is confusion, wasted money, and eventually giving up on evidence altogether.
 
 ## What it does
 Paste a study abstract or article (or tap a built-in example) and get:

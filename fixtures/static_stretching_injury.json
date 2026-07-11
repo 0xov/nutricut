@@ -1,0 +1,16 @@
+{
+  "confidence": "high",
+  "contradictions": [
+    {
+      "point": "The scientific consensus, as highlighted by this review, indicates that general warm-up, not static stretching on its own, is supported by evidence for injury prevention before sport.",
+      "source": "The systematic review itself"
+    }
+  ],
+  "epistemic_gaps": [
+    "More research is needed to confirm the weak, preliminary evidence regarding static stretching's specific effect on muscle strain reduction."
+  ],
+  "headline_claim": "",
+  "primary_claim": "A systematic review found that pre-exercise static stretching did not significantly reduce the overall rate of exercise-related injuries, though there was weak, preliminary evidence for a reduction in muscle strains specifically. Separately, holding a static stretch for a long time immediately before activity was linked to a small, temporary drop in muscle force and power.",
+  "sample_size": "Multiple controlled trials included in the systematic review.",
+  "study_type": "meta_analysis"
+}
