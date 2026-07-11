@@ -366,7 +366,7 @@
     const g=$('epistemicGaps');
     g.innerHTML = (d.epistemic_gaps&&d.epistemic_gaps.length)
       ? d.epistemic_gaps.map((x,i)=>'<div class="item"><span class="num">'+(i+1)+'</span>'+esc(x)+'</div>').join('')
-      : '<div class="none">No major design gaps stood out for this study type — the claim looks reasonably supported on its own terms.</div>';
+      : '<div class="none">No major design gaps for this study type. The claim looks well supported on its own terms.</div>';
 
     // what contradicts it — empty = honesty signal, system-bound wording + per-source search link
     const c=$('contradictionsList');
@@ -374,7 +374,7 @@
       ? d.contradictions.map(x=>'<div class="item">'+esc(x.point)
           +'<span class="src">'+esc(x.source)
           +' <a class="src-link" href="'+scholarUrl(x.source)+'" target="_blank" rel="noopener">search this &rarr;</a></span></div>').join('')
-      : '<div class="none">No counter-evidence surfaced in this text. That’s not a miss — NutriCut won’t invent a citation it can’t find.</div>';
+      : '<div class="none">Nothing in this text contradicts the claim. If there were counter-evidence, it would show here.</div>';
 
     $('results').style.display='block';
     $('results').scrollIntoView({behavior:'smooth',block:'start'});
